@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
 import axios from 'axios';
+
+import {
+  Button,
+  Container,
+  Divider,
+  Grid,
+  Input,
+  Label,
+  Header,
+  Message,
+  Table,
+} from 'semantic-ui-react';
 
 const Weather = ({ city }) => {
   const [weatherData, setWeatherData] = useState(-1);
@@ -35,9 +46,12 @@ const Country = (props) => {
   const { name } = props.country;
   const { setCountryFilter } = props;
   return (
-    <li>
-      {name} <button onClick={() => setCountryFilter(name)}>show</button>
-    </li>
+    <Table.Row>
+      <Table.Cell>{name}</Table.Cell>
+      <Table.Cell>
+        <Button onClick={() => setCountryFilter(name)}>show</Button>
+      </Table.Cell>
+    </Table.Row>
   );
 };
 
@@ -71,24 +85,31 @@ const Countries = (props) => {
   }
 
   let filteredCountries = countries;
-  if (countryFilter !== '') {
+  if (countryFilter === '') {
+    return null;
+  } else {
     filteredCountries = countries.filter((country) =>
       country.name.toLowerCase().includes(countryFilter.toLowerCase())
     );
   }
 
   if (filteredCountries.length > 10) {
-    return <p>Over 10 matches not shown</p>;
+    return <Message>Over 10 matches not shown</Message>;
   }
 
   if (filteredCountries.length > 1) {
-    return filteredCountries.map((country) => (
+    const countries = filteredCountries.map((country) => (
       <Country
         key={country.name}
         country={country}
         setCountryFilter={setCountryFilter}
       />
     ));
+    return (
+      <Table basic="very" cell unstackable compact>
+        <Table.Body>{countries}</Table.Body>
+      </Table>
+    );
   }
 
   if (filteredCountries.length === 0) {
@@ -116,17 +137,30 @@ const App = (props) => {
   }, []);
 
   return (
-    <div>
-      <p>
-        find countries:
-        <input onChange={onCountryFilterChange} value={countryFilter} />
-      </p>
-      <Countries
-        countries={countries}
-        countryFilter={countryFilter}
-        setCountryFilter={setCountryFilter}
-      />
-    </div>
+    <Container text style={{ paddingTop: '1em', paddingBottom: '1em' }}>
+      <Grid columns={1}>
+        <Grid.Column>
+          <Header as="h1" textAlign="center">
+            <Header.Content>Maiden tiedot</Header.Content>
+          </Header>
+          <Divider />
+          <Input
+            style={{ width: '100%' }}
+            label="Country name:"
+            focus
+            placeholder="Search..."
+            onChange={onCountryFilterChange}
+            value={countryFilter}
+          />
+          <Divider />
+          <Countries
+            countries={countries}
+            countryFilter={countryFilter}
+            setCountryFilter={setCountryFilter}
+          />
+        </Grid.Column>
+      </Grid>
+    </Container>
   );
 };
 
