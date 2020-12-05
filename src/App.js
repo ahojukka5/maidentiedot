@@ -1,14 +1,14 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import axios from 'axios';
 
-const Weather = ({city}) => {
+const Weather = ({ city }) => {
   const [weatherData, setWeatherData] = useState(-1);
   const accessKey = '66fc4921f8cfa66fdbdbb69478498de0';
   const url = `http://api.weatherstack.com/current?access_key=${accessKey}&query=${city}`;
 
   useEffect(() => {
-    axios.get(url).then(response => {
+    axios.get(url).then((response) => {
       setWeatherData(response.data.current);
     });
     // https://stackoverflow.com/questions/55840294/how-to-fix-missing-dependency-warning-when-using-useeffect-react-hook
@@ -31,9 +31,9 @@ const Weather = ({city}) => {
   );
 };
 
-const Country = props => {
-  const {name} = props.country;
-  const {setCountryFilter} = props;
+const Country = (props) => {
+  const { name } = props.country;
+  const { setCountryFilter } = props;
   return (
     <li>
       {name} <button onClick={() => setCountryFilter(name)}>show</button>
@@ -41,11 +41,11 @@ const Country = props => {
   );
 };
 
-const CountryDetail = props => {
-  const {name, capital, population, languages, flag} = props.country;
+const CountryDetail = (props) => {
+  const { name, capital, population, languages, flag } = props.country;
 
   const languageRows = () => {
-    return languages.map(language => {
+    return languages.map((language) => {
       return <li key={language.iso639_1}>{language.name}</li>;
     });
   };
@@ -63,8 +63,8 @@ const CountryDetail = props => {
   );
 };
 
-const Countries = props => {
-  const {countries, countryFilter, setCountryFilter} = props;
+const Countries = (props) => {
+  const { countries, countryFilter, setCountryFilter } = props;
 
   if (countries.length === 0) {
     return <p>Loading ...</p>;
@@ -72,8 +72,8 @@ const Countries = props => {
 
   let filteredCountries = countries;
   if (countryFilter !== '') {
-    filteredCountries = countries.filter(country =>
-      country.name.toLowerCase().includes(countryFilter.toLowerCase()),
+    filteredCountries = countries.filter((country) =>
+      country.name.toLowerCase().includes(countryFilter.toLowerCase())
     );
   }
 
@@ -82,7 +82,7 @@ const Countries = props => {
   }
 
   if (filteredCountries.length > 1) {
-    return filteredCountries.map(country => (
+    return filteredCountries.map((country) => (
       <Country
         key={country.name}
         country={country}
@@ -101,16 +101,16 @@ const Countries = props => {
   return <CountryDetail country={filteredCountries[0]} />;
 };
 
-const App = props => {
+const App = (props) => {
   const [countries, setCountries] = useState([]);
   const [countryFilter, setCountryFilter] = useState('sw');
 
-  const onCountryFilterChange = event => {
+  const onCountryFilterChange = (event) => {
     setCountryFilter(event.target.value);
   };
 
   useEffect(() => {
-    axios.get('https://restcountries.eu/rest/v2/all').then(response => {
+    axios.get('https://restcountries.eu/rest/v2/all').then((response) => {
       setCountries(response.data);
     });
   }, []);
