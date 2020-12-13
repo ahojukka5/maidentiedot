@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+import config from './config';
+
 import {
   Button,
   Container,
   Divider,
   Grid,
   Input,
-  Label,
   Header,
   Message,
   Table,
@@ -15,8 +16,7 @@ import {
 
 const Weather = ({ city }) => {
   const [weatherData, setWeatherData] = useState(-1);
-  const accessKey = '66fc4921f8cfa66fdbdbb69478498de0';
-  const url = `http://api.weatherstack.com/current?access_key=${accessKey}&query=${city}`;
+  const url = `${config.apiBaseUrl}/weather?city=${city}`;
 
   useEffect(() => {
     axios.get(url).then((response) => {
